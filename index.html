@@ -149,21 +149,79 @@
     -webkit-font-smoothing: antialiased;
     transition: background-color .35s ease, color .35s ease;
   }
-  /* 语言切换过渡：先淡出下沉，换文案后从下方浮起 */
-  .page.lang-out { animation: langOut .16s ease forwards; }
-  /* 逐段浮起：每个版块依次从下方浮起，错开 60ms */
-  .page.lang-in > * { animation: langIn .45s cubic-bezier(.22, 1, .36, 1) backwards; }
-  .page.lang-in > *:nth-child(1) { animation-delay: 0s; }
-  .page.lang-in > *:nth-child(2) { animation-delay: .06s; }
-  .page.lang-in > *:nth-child(3) { animation-delay: .12s; }
-  .page.lang-in > *:nth-child(4) { animation-delay: .18s; }
-  .page.lang-in > *:nth-child(5) { animation-delay: .24s; }
-  .page.lang-in > *:nth-child(6) { animation-delay: .3s; }
-  .page.lang-in > *:nth-child(7) { animation-delay: .36s; }
-  @keyframes langOut { to { opacity: 0; transform: translateY(-6px); } }
-  @keyframes langIn {
-    from { opacity: 0; transform: translateY(26px); }
-    to   { opacity: 1; transform: none; }
+  /* 语言切换过渡：双层幕布从底部升起（浅色层追着主层跑），盖满后换文案，再先后向上穿出 */
+  .curtain {
+    position: fixed;
+    inset: 0;
+    z-index: 300; /* 盖住固定顶栏（z-index 100） */
+    overflow: hidden; /* 幕布层在屏外的部分由容器裁剪 */
+    pointer-events: none;
+  }
+  .curtain-main,
+  .curtain-front {
+    position: absolute;
+    inset: 0;
+    border-radius: 0 0 50% 50% / 0 0 64px 64px; /* 底缘微弧：离场时弧形拖尾扫出 */
+    transform: translateY(101%);
+    will-change: transform;
+  }
+  .curtain-main {
+    z-index: 2;
+    background: var(--bg);
+  }
+  .curtain-main::before { /* 上升前缘的主题色细线 */
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+  .curtain-front {
+    z-index: 3;
+    background: var(--bg);
+    background: color-mix(in srgb, var(--accent) 13%, var(--bg)); /* 浅强调色追赶层；不支持 color-mix 时回退为同色 */
+  }
+  .curtain-inner {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 0; /* 基态隐藏：显隐完全由 curtainText 动画帧驱动，动画结束回落到此态 */
+  }
+  .curtain-mark {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 500;
+    letter-spacing: .14em;
+    text-indent: .14em; /* 抵消末字字距，保持视觉居中 */
+    color: var(--accent);
+  }
+  .curtain-sub {
+    margin-top: 12px;
+    font-size: 12px;
+    letter-spacing: .08em;
+    color: var(--text);
+    opacity: .5;
+  }
+  .curtain-run .curtain-main  { animation: curtainPass 1s cubic-bezier(.22, 1, .36, 1) forwards; }
+  .curtain-run .curtain-front { animation: curtainPass 1s cubic-bezier(.22, 1, .36, 1) .09s forwards; }
+  .curtain-run .curtain-inner { animation: curtainText 1s ease both; }
+  @keyframes curtainPass {
+    0%   { transform: translateY(101%); }
+    50%  { transform: translateY(0); animation-timing-function: cubic-bezier(.55, 0, .72, .35); }
+    100% { transform: translateY(-101%); }
+  }
+  @keyframes curtainText {
+    0%   { opacity: 0; transform: translateY(28px); }
+    40%  { opacity: 1; transform: translateY(0); }
+    82%  { opacity: 1; transform: translateY(0); animation-timing-function: ease-in; }
+    100% { opacity: 0; transform: translateY(-26px); }
   }
 
   ::selection { background: var(--selection); }
@@ -936,6 +994,15 @@
 
 </main>
 
+<div class="curtain" id="curtain" aria-hidden="true">
+  <div class="curtain-main"></div>
+  <div class="curtain-front"></div>
+  <div class="curtain-inner">
+    <div class="curtain-mark">黎同学</div>
+    <div class="curtain-sub" id="curtainSub">正在切换…</div>
+  </div>
+</div>
+
 <script>
 (function () {
   'use strict';
@@ -1094,6 +1161,8 @@
 
   var langBtn = $('#langBtn');
   var page = $('.page');
+  var curtain = $('#curtain');
+  var curtainBusy = false;
   function applyLang(lang, persist) {
     function render() {
       var isEn = lang === 'en';
@@ -1129,23 +1198,23 @@
       try { localStorage.setItem('intro-lang', lang); } catch (e) {}
     }
 
-    /* 点击切换时做「淡出下沉 → 换文案 → 从下方浮起」；初始化或减少动态偏好则直接切换 */
+    /* 点击切换时用幕布遮罩过渡：从底部升起，盖满后换文案，再向上穿出；初始化或减少动态偏好则直接切换 */
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (persist && !reduced) {
-      page.classList.add('lang-out');
+    if (persist && !reduced && curtain) {
+      $('#curtainSub').textContent = lang === 'en' ? 'Switching…' : '正在切换…';
+      curtainBusy = true;
+      curtain.classList.add('curtain-run');
+      setTimeout(render, 590); /* 前层 .09s 延迟 + 0.5s 升到位 = 双层都盖满的时刻 */
       setTimeout(function () {
-        render();
-        page.classList.remove('lang-out');
-        page.classList.add('lang-in');
-        setTimeout(function () {
-          page.classList.remove('lang-in');
-        }, 830);
-      }, 170);
+        curtain.classList.remove('curtain-run');
+        curtainBusy = false;
+      }, 1160);
     } else {
       render();
     }
   }
   langBtn.addEventListener('click', function () {
+    if (curtainBusy) return; /* 幕布行进中忽略重复点击，防止动画被打断错乱 */
     var cur = document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'zh';
     applyLang(cur === 'en' ? 'zh' : 'en', true);
   });

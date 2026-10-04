@@ -12,6 +12,12 @@
     try { t = localStorage.getItem('intro-theme'); } catch (e) {}
     if (t !== 'apple' && t !== 'claude' && t !== 'dark') t = DEFAULT_THEME;
     document.documentElement.setAttribute('data-theme', t);
+
+    /* 语言记忆：优先恢复上次选择（zh/en），否则默认中文 */
+    var lang = null;
+    try { lang = localStorage.getItem('intro-lang'); } catch (e) {}
+    if (lang !== 'zh' && lang !== 'en') lang = 'zh';
+    document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-CN');
   })();
 </script>
 <style>
@@ -143,6 +149,22 @@
     -webkit-font-smoothing: antialiased;
     transition: background-color .35s ease, color .35s ease;
   }
+  /* 语言切换过渡：先淡出下沉，换文案后从下方浮起 */
+  .page.lang-out { animation: langOut .16s ease forwards; }
+  /* 逐段浮起：每个版块依次从下方浮起，错开 60ms */
+  .page.lang-in > * { animation: langIn .45s cubic-bezier(.22, 1, .36, 1) backwards; }
+  .page.lang-in > *:nth-child(1) { animation-delay: 0s; }
+  .page.lang-in > *:nth-child(2) { animation-delay: .06s; }
+  .page.lang-in > *:nth-child(3) { animation-delay: .12s; }
+  .page.lang-in > *:nth-child(4) { animation-delay: .18s; }
+  .page.lang-in > *:nth-child(5) { animation-delay: .24s; }
+  .page.lang-in > *:nth-child(6) { animation-delay: .3s; }
+  .page.lang-in > *:nth-child(7) { animation-delay: .36s; }
+  @keyframes langOut { to { opacity: 0; transform: translateY(-6px); } }
+  @keyframes langIn {
+    from { opacity: 0; transform: translateY(26px); }
+    to   { opacity: 1; transform: none; }
+  }
 
   ::selection { background: var(--selection); }
 
@@ -241,6 +263,26 @@
   .tt-opt.active { color: var(--accent-contrast); }
   /* 焦点环画在按钮内侧，避免被轨道裁剪 */
   .theme-toggle .tt-opt:focus-visible { outline-offset: -3px; }
+
+  /* ===== 语言切换（单按钮，显示可切换到的目标语言） ===== */
+  .lang-btn {
+    height: 34px;
+    min-width: 44px;
+    padding: 0 13px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius-pill);
+    background: var(--bg-alt);
+    color: var(--text-2);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+    transition: color .3s ease, border-color .3s ease, background-color .35s ease;
+  }
+  @media (hover: hover) {
+    .lang-btn:hover { color: var(--accent); border-color: var(--accent); }
+  }
 
   /* ===== 移动端汉堡菜单 ===== */
   .hamburger {
@@ -623,9 +665,12 @@
     .hamburger { display: flex; }
     /* 主题切换器：收窄到单字宽度 */
     .theme-toggle { --tt-w: 34px; }
+    /* 语言切换按钮：同步收窄 */
+    .lang-btn { height: 30px; min-width: 38px; padding: 0 9px; font-size: 12px; }
     /* 藏掉原文字（暖纸/简白/暗色），改用 data-short 单字显示 */
     .tt-opt { font-size: 0; padding: 4px 0; }
     .tt-opt::before { content: attr(data-short); font-size: 11px; }
+    html[lang="en"] .tt-opt::before { font-size: 9px; }
     /* 压缩导航内距，为切换器腾出空间 */
     .nav-inner { padding: 0 16px; }
     .nav-actions { gap: 8px; }
@@ -718,20 +763,21 @@
 <!-- ================= 导航 ================= -->
 <nav id="nav" aria-label="页面导航">
   <div class="nav-inner">
-    <a class="nav-logo" href="#top">黎同学</a>
+    <a class="nav-logo" href="#top" data-i18n="nav.logo">黎同学</a>
     <ul class="nav-links" id="navMenu">
-      <li><a href="#about">关于</a></li>
-      <li><a href="#info">信息</a></li>
-      <li><a href="#edu">教育</a></li>
-      <li><a href="#skills">日常</a></li>
-      <li><a href="#contact">联系</a></li>
+      <li><a href="#about" data-i18n="nav.about">关于</a></li>
+      <li><a href="#info" data-i18n="nav.info">信息</a></li>
+      <li><a href="#edu" data-i18n="nav.edu">教育</a></li>
+      <li><a href="#skills" data-i18n="nav.daily">日常</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">联系</a></li>
     </ul>
     <div class="nav-actions">
+      <button type="button" class="lang-btn" id="langBtn" aria-label="Switch to English">EN</button>
       <div class="theme-toggle" role="group" aria-label="外观主题切换">
         <span class="tt-thumb" aria-hidden="true"></span>
-        <button type="button" class="tt-opt active" data-set="apple" data-short="白" aria-label="简白主题" aria-pressed="true">简白</button>
-        <button type="button" class="tt-opt" data-set="claude" data-short="纸" aria-label="暖纸主题" aria-pressed="false">暖纸</button>
-        <button type="button" class="tt-opt" data-set="dark" data-short="暗" aria-label="暗色主题" aria-pressed="false">暗色</button>
+        <button type="button" class="tt-opt active" data-set="apple" data-short="白" data-short-zh="白" data-short-en="Light" data-i18n="theme.light" aria-label="简白主题" aria-pressed="true">简白</button>
+        <button type="button" class="tt-opt" data-set="claude" data-short="纸" data-short-zh="纸" data-short-en="Paper" data-i18n="theme.paper" aria-label="暖纸主题" aria-pressed="false">暖纸</button>
+        <button type="button" class="tt-opt" data-set="dark" data-short="暗" data-short-zh="暗" data-short-en="Dark" data-i18n="theme.dark" aria-label="暗色主题" aria-pressed="false">暗色</button>
       </div>
       <button class="hamburger" id="hamburger" aria-label="打开菜单" aria-expanded="false" aria-controls="navMenu">
         <span></span><span></span><span></span>
@@ -740,27 +786,29 @@
   </div>
 </nav>
 
+<main class="page">
+
 <!-- ================= Hero ================= -->
 <header class="hero" id="top">
-  <div class="avatar" aria-hidden="true">黎</div>
+  <div class="avatar" aria-hidden="true" data-i18n="hero.avatar">黎</div>
   <p class="hero-greeting" id="greeting">你好 👋</p>
-  <h1>学一点，做一点，<br>离想做的事近一点。</h1>
+  <h1 data-i18n-html="hero.title">学一点，做一点，<br>离想做的事近一点。</h1>
   <p class="typing-line" aria-label="个人标语"><span id="typing"></span><span class="cursor" aria-hidden="true">|</span></p>
-  <a class="hero-cta" href="#about">认识一下我</a>
+  <a class="hero-cta" href="#about" data-i18n="hero.cta">认识一下我</a>
   <span class="hero-scroll-hint" aria-hidden="true">⌄</span>
 </header>
 
 <!-- ================= 关于我 ================= -->
 <section class="section-alt" id="about">
   <div class="section-inner reveal">
-    <h2>关于我</h2>
-    <p class="about-text">
+    <h2 data-i18n="about.title">关于我</h2>
+    <p class="about-text" data-i18n="about.p1">
       黎同学，汕头大学 2026 级生物医学工程，大一。
     </p>
-    <p class="about-text">
+    <p class="about-text" data-i18n="about.p2">
       对这个专业有兴趣，更喜欢能动手的那部分。
     </p>
-    <p class="about-text">
+    <p class="about-text" data-i18n="about.p3">
       性格偏 i，人多的场合话不多，熟了之后另说。
     </p>
   </div>
@@ -770,35 +818,35 @@
 <!-- ================= 基本信息 ================= -->
 <section id="info">
   <div class="section-inner reveal">
-    <h2>基本信息</h2>
-    <p class="section-lead">一些关于我的基本事实。</p>
+    <h2 data-i18n="info.title">基本信息</h2>
+    <p class="section-lead" data-i18n="info.lead">一些关于我的基本事实。</p>
     <div class="info-grid">
       <div class="info-item">
-        <span class="info-label">怎么称呼</span>
-        <span class="info-value">黎同学</span>
+        <span class="info-label" data-i18n="info.call">怎么称呼</span>
+        <span class="info-value" data-i18n="info.call_v">黎同学</span>
       </div>
       <div class="info-item">
-        <span class="info-label">学校</span>
-        <span class="info-value">汕头大学</span>
+        <span class="info-label" data-i18n="info.school">学校</span>
+        <span class="info-value" data-i18n="info.school_v">汕头大学</span>
       </div>
       <div class="info-item">
-        <span class="info-label">专业</span>
-        <span class="info-value">生物医学工程<span class="sub">2026 级 · 本科在读</span></span>
+        <span class="info-label" data-i18n="info.major">专业</span>
+        <span class="info-value"><span data-i18n="info.major_v">生物医学工程</span><span class="sub" data-i18n="info.major_sub">2026 级 · 本科在读</span></span>
       </div>
       <div class="info-item">
-        <span class="info-label">年级</span>
-        <span class="info-value">大一</span>
+        <span class="info-label" data-i18n="info.year">年级</span>
+        <span class="info-value" data-i18n="info.year_v">大一</span>
       </div>
       <div class="info-item">
-        <span class="info-label">家乡</span>
-        <span class="info-value">中国 · 惠州市</span>
+        <span class="info-label" data-i18n="info.home">家乡</span>
+        <span class="info-value" data-i18n="info.home_v">中国 · 惠州市</span>
       </div>
       <div class="info-item">
-        <span class="info-label">爱好</span>
-        <span class="info-value">科技数码 · 摄影 · 篮球 · 足球 · 游戏 · 小说</span>
+        <span class="info-label" data-i18n="info.hobby">爱好</span>
+        <span class="info-value" data-i18n="info.hobby_v">科技数码 · 摄影 · 篮球 · 足球 · 游戏 · 小说</span>
       </div>
       <div class="info-item wide">
-        <span class="info-label">座右铭</span>
+        <span class="info-label" data-i18n="info.motto">座右铭</span>
         <span class="info-value">Stay hungry, stay foolish.</span>
       </div>
     </div>
@@ -808,19 +856,19 @@
 <!-- ================= 教育经历 ================= -->
 <section class="section-alt" id="edu">
   <div class="section-inner reveal">
-    <h2>教育经历</h2>
+    <h2 data-i18n="edu.title">教育经历</h2>
     <div class="timeline">
       <div class="t-item">
         <span class="t-dot"></span>
-        <p class="t-time">2026 年 — 至今</p>
-        <h3>汕头大学 · 生物医学工程 · 本科在读</h3>
-        <p class="t-desc">大一在读，成长ing。</p>
+        <p class="t-time" data-i18n="edu.t1_time">2026 年 — 至今</p>
+        <h3 data-i18n="edu.t1_title">汕头大学 · 生物医学工程 · 本科在读</h3>
+        <p class="t-desc" data-i18n="edu.t1_desc">大一在读，成长ing。</p>
       </div>
       <div class="t-item">
         <span class="t-dot"></span>
-        <p class="t-time">2023 年 — 2026 年</p>
-        <h3>高中 · 理科</h3>
-        <p class="t-desc">理科方向。</p>
+        <p class="t-time" data-i18n="edu.t2_time">2023 年 — 2026 年</p>
+        <h3 data-i18n="edu.t2_title">高中 · 理科</h3>
+        <p class="t-desc" data-i18n="edu.t2_desc">理科方向。</p>
       </div>
     </div>
   </div>
@@ -829,36 +877,36 @@
 <!-- ================= 技能与方向 ================= -->
 <section id="skills">
   <div class="section-inner reveal">
-    <h2>兴趣与日常</h2>
-    <p class="section-lead">一些零碎的标签，拼凑出一个大概的我。</p>
+    <h2 data-i18n="skills.title">兴趣与日常</h2>
+    <p class="section-lead" data-i18n="skills.lead">一些零碎的标签，拼凑出一个大概的我。</p>
     <div class="skill-grid">
       <div class="skill-card">
         <div class="skill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 1v2h2V1zm4 0v2h2V1zM9 21v2h2v-2zm4 0v2h2v-2zM1 9h2v2H1zm0 4h2v2H1zm20-4h2v2h-2zm0 4h2v2h-2zM5 5h14v14H5zM7 7v10h10V7zm2 2h6v6H9z"/></svg></div>
-        <h3>科技与 AI</h3>
-        <p>喜欢科技数码，对 AI 感兴趣——平时玩各种大模型、关注点行业新闻。</p>
+        <h3 data-i18n="skills.c1_t">科技与 AI</h3>
+        <p data-i18n="skills.c1_p">喜欢科技数码，对 AI 感兴趣——平时玩各种大模型、关注点行业新闻。</p>
       </div>
       <div class="skill-card">
         <div class="skill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12l3.5 9.5c.6 1.7-.6 3.5-2.4 3.5h-1.3c-.8 0-1.5-.5-1.8-1.2L15.4 16H8.6l-.6 1.8c-.3.7-1 1.2-1.8 1.2H4.9c-1.8 0-3-1.8-2.4-3.5L6 6zm1.5 3v1.5H6V12h1.5v1.5H9V12h1.5v-1.5H9V9H7.5zm8.75.75a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8zm2.2 2.2a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8z"/></svg></div>
-        <h3>游戏与运动</h3>
-        <p>手游打王者荣耀和星穹铁道，也玩 Steam 上的端游；偶尔去打球，篮球足球都可以。对我来说都是放松。</p>
+        <h3 data-i18n="skills.c2_t">游戏与运动</h3>
+        <p data-i18n="skills.c2_p">手游打王者荣耀和星穹铁道，也玩 Steam 上的端游；偶尔去打球，篮球足球都可以。对我来说都是放松。</p>
       </div>
       <div class="skill-card">
         <div class="skill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6a1 1 0 0 1 1 1v1h2a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2V4a1 1 0 0 1 1-1zm-1 4H6v11h12V7zm1-2v1h4V5zm3 4.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zm0 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg></div>
-        <h3>拍照与影音</h3>
-        <p>喜欢拍照，随手记录点东西；听歌偏爱 R&amp;B，也看小说，偶尔翻点学习类的书。</p>
+        <h3 data-i18n="skills.c3_t">拍照与影音</h3>
+        <p data-i18n="skills.c3_p">喜欢拍照，随手记录点东西；听歌偏爱 R&amp;B，也看小说，偶尔翻点学习类的书。</p>
       </div>
     </div>
     <div class="tags">
-      <span class="tag">科技数码</span>
-      <span class="tag">AI</span>
-      <span class="tag">摄影</span>
-      <span class="tag">篮球</span>
-      <span class="tag">足球</span>
-      <span class="tag">王者荣耀</span>
-      <span class="tag">星穹铁道</span>
-      <span class="tag">Steam 端游</span>
-      <span class="tag">R&amp;B</span>
-      <span class="tag">小说</span>
+      <span class="tag" data-i18n="skills.tag1">科技数码</span>
+      <span class="tag" data-i18n="skills.tag2">AI</span>
+      <span class="tag" data-i18n="skills.tag3">摄影</span>
+      <span class="tag" data-i18n="skills.tag4">篮球</span>
+      <span class="tag" data-i18n="skills.tag5">足球</span>
+      <span class="tag" data-i18n="skills.tag6">王者荣耀</span>
+      <span class="tag" data-i18n="skills.tag7">星穹铁道</span>
+      <span class="tag" data-i18n="skills.tag8">Steam 端游</span>
+      <span class="tag" data-i18n="skills.tag9">R&amp;B</span>
+      <span class="tag" data-i18n="skills.tag10">小说</span>
     </div>
   </div>
 </section>
@@ -866,25 +914,27 @@
 <!-- ================= 联系 ================= -->
 <section class="contact-inner section-alt" id="contact">
   <div class="section-inner reveal">
-    <h2>保持联系</h2>
-    <p class="section-lead">
+    <h2 data-i18n="contact.title">保持联系</h2>
+    <p class="section-lead" data-i18n="contact.lead">
       没什么特别要说的，欢迎随便聊聊。
     </p>
     <div class="contact-links">
       <a class="contact-chip" href="#" id="mail-chip">
-        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/></svg><span>邮箱</span>
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/></svg><span data-i18n="contact.mail">邮箱</span>
       </a>
       <a class="contact-chip" href="https://github.com/Likr715" target="_blank" rel="noopener">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg><span>GitHub</span>
       </a>
     </div>
-    <p class="contact-note">邮箱看到就会回，不过我课多，慢半拍别急。</p>
+    <p class="contact-note" data-i18n="contact.note">邮箱看到就会回，不过我课多，慢半拍别急。</p>
   </div>
 </section>
 
 <footer>
-  © <span id="year"></span> 黎同学 · 生物医学工程
+  © <span id="year"></span> <span data-i18n="footer.text">黎同学 · 生物医学工程</span>
 </footer>
+
+</main>
 
 <script>
 (function () {
@@ -919,25 +969,114 @@
   /* ===== 页脚年份 ===== */
   $('#year').textContent = new Date().getFullYear();
 
-  /* ===== 按时间问候 ===== */
-  (function () {
-    var h = new Date().getHours();
-    var g = h < 6 ? '夜深了 🌙' :
-            h < 11 ? '早上好 ☀️' :
-            h < 14 ? '中午好 🌤️' :
-            h < 18 ? '下午好 🌇' : '晚上好 🌆';
-    $('#greeting').textContent = g + '，欢迎来到我的主页';
-  })();
+  /* ===== 语言切换（中文 / English） =====
+     默认中文；只有用户点击时才写入 localStorage，记住上次选择。 */
+  var I18N = {
+    'nav.logo':     { zh: '黎同学', en: 'Li' },
+    'nav.about':    { zh: '关于', en: 'About' },
+    'nav.info':     { zh: '信息', en: 'Info' },
+    'nav.edu':      { zh: '教育', en: 'Education' },
+    'nav.daily':    { zh: '日常', en: 'Interests' },
+    'nav.contact':  { zh: '联系', en: 'Contact' },
+    'theme.light':  { zh: '简白', en: 'Light' },
+    'theme.paper':  { zh: '暖纸', en: 'Paper' },
+    'theme.dark':   { zh: '暗色', en: 'Dark' },
+    'hero.avatar':  { zh: '黎', en: 'L' },
+    'hero.title':   { zh: '学一点，做一点，<br>离想做的事近一点。', en: 'Learn a little, build a little,<br>get a little closer to what I want to do.' },
+    'hero.cta':     { zh: '认识一下我', en: 'Get to know me' },
+    'about.title':  { zh: '关于我', en: 'About Me' },
+    'about.p1':     { zh: '黎同学，汕头大学 2026 级生物医学工程，大一。', en: 'Li — a freshman in Biomedical Engineering at Shantou University (Class of 2026).' },
+    'about.p2':     { zh: '对这个专业有兴趣，更喜欢能动手的那部分。', en: "I'm into my major, especially the hands-on side of it." },
+    'about.p3':     { zh: '性格偏 i，人多的场合话不多，熟了之后另说。', en: "I lean introverted and don't talk much in crowds — but that changes once you get to know me." },
+    'info.title':   { zh: '基本信息', en: 'Basics' },
+    'info.lead':    { zh: '一些关于我的基本事实。', en: 'A few basic facts about me.' },
+    'info.call':    { zh: '怎么称呼', en: 'What to call me' },
+    'info.school':  { zh: '学校', en: 'University' },
+    'info.major':   { zh: '专业', en: 'Major' },
+    'info.year':    { zh: '年级', en: 'Year' },
+    'info.home':    { zh: '家乡', en: 'Hometown' },
+    'info.hobby':   { zh: '爱好', en: 'Hobbies' },
+    'info.motto':   { zh: '座右铭', en: 'Motto' },
+    'info.call_v':  { zh: '黎同学', en: 'Li' },
+    'info.school_v':{ zh: '汕头大学', en: 'Shantou University' },
+    'info.major_v': { zh: '生物医学工程', en: 'Biomedical Engineering' },
+    'info.major_sub':{ zh: '2026 级 · 本科在读', en: 'Class of 2026 · Undergraduate' },
+    'info.year_v':  { zh: '大一', en: 'Freshman' },
+    'info.home_v':  { zh: '中国 · 惠州市', en: 'Huizhou, China' },
+    'info.hobby_v': { zh: '科技数码 · 摄影 · 篮球 · 足球 · 游戏 · 小说', en: 'Tech · Photography · Basketball · Football · Games · Fiction' },
+    'edu.title':    { zh: '教育经历', en: 'Education' },
+    'edu.t1_time':  { zh: '2026 年 — 至今', en: '2026 — Present' },
+    'edu.t1_title': { zh: '汕头大学 · 生物医学工程 · 本科在读', en: 'Shantou University · Biomedical Engineering · Undergraduate' },
+    'edu.t1_desc':  { zh: '大一在读，成长ing。', en: 'Freshman year — still a work in progress.' },
+    'edu.t2_time':  { zh: '2023 年 — 2026 年', en: '2023 — 2026' },
+    'edu.t2_title': { zh: '高中 · 理科', en: 'High School · Science' },
+    'edu.t2_desc':  { zh: '理科方向。', en: 'Science track.' },
+    'skills.title': { zh: '兴趣与日常', en: 'Interests & Daily Life' },
+    'skills.lead':  { zh: '一些零碎的标签，拼凑出一个大概的我。', en: 'A handful of loose labels that add up to a rough sketch of me.' },
+    'skills.c1_t':  { zh: '科技与 AI', en: 'Tech & AI' },
+    'skills.c1_p':  { zh: '喜欢科技数码，对 AI 感兴趣——平时玩各种大模型、关注点行业新闻。', en: "I love tech and gadgets, and I'm especially into AI — I play around with all kinds of LLMs and keep up with industry news." },
+    'skills.c2_t':  { zh: '游戏与运动', en: 'Games & Sports' },
+    'skills.c2_p':  { zh: '手游打王者荣耀和星穹铁道，也玩 Steam 上的端游；偶尔去打球，篮球足球都可以。对我来说都是放松。', en: "On mobile I play Honor of Kings and Honkai: Star Rail, plus some PC games on Steam. I also hit the court now and then — basketball or football, both work. It's all a way to unwind." },
+    'skills.c3_t':  { zh: '拍照与影音', en: 'Photography & Media' },
+    'skills.c3_p':  { zh: '喜欢拍照，随手记录点东西；听歌偏爱 R&B，也看小说，偶尔翻点学习类的书。', en: "I like taking photos and casually capturing little moments. For music I lean toward R&B, I read fiction too, and sometimes flip through books for learning." },
+    'skills.tag1':  { zh: '科技数码', en: 'Tech' },
+    'skills.tag2':  { zh: 'AI', en: 'AI' },
+    'skills.tag3':  { zh: '摄影', en: 'Photography' },
+    'skills.tag4':  { zh: '篮球', en: 'Basketball' },
+    'skills.tag5':  { zh: '足球', en: 'Football' },
+    'skills.tag6':  { zh: '王者荣耀', en: 'Honor of Kings' },
+    'skills.tag7':  { zh: '星穹铁道', en: 'Honkai: Star Rail' },
+    'skills.tag8':  { zh: 'Steam 端游', en: 'Steam PC games' },
+    'skills.tag9':  { zh: 'R&B', en: 'R&B' },
+    'skills.tag10': { zh: '小说', en: 'Fiction' },
+    'contact.title':{ zh: '保持联系', en: 'Keep in Touch' },
+    'contact.lead': { zh: '没什么特别要说的，欢迎随便聊聊。', en: "Nothing much to add — feel free to drop by and chat." },
+    'contact.mail': { zh: '邮箱', en: 'Email' },
+    'contact.note': { zh: '邮箱看到就会回，不过我课多，慢半拍别急。', en: "I'll reply when I see your email — but with a full course load, I might be a bit slow. No rush." },
+    'footer.text':  { zh: '黎同学 · 生物医学工程', en: 'Li · Biomedical Engineering' }
+  };
+  var TITLES = { zh: '黎同学 · 个人介绍', en: 'Li · About Me' };
 
-  /* ===== 打字机（身份标语 + 座右铭轮播） ===== */
-  (function () {
-    var el = $('#typing');
-    var phrases = [
+  /* ===== 按时间问候（跟随语言） ===== */
+  function renderGreeting() {
+    var isEn = document.documentElement.getAttribute('lang') === 'en';
+    var h = new Date().getHours();
+    if (isEn) {
+      var g = h < 6 ? 'Good evening 🌙' :
+              h < 11 ? 'Good morning ☀️' :
+              h < 14 ? 'Good afternoon 🌤️' :
+              h < 18 ? 'Good afternoon 🌇' : 'Good evening 🌆';
+      $('#greeting').textContent = g + ', welcome to my page';
+    } else {
+      var gz = h < 6 ? '夜深了 🌙' :
+              h < 11 ? '早上好 ☀️' :
+              h < 14 ? '中午好 🌤️' :
+              h < 18 ? '下午好 🌇' : '晚上好 🌆';
+      $('#greeting').textContent = gz + '，欢迎来到我的主页';
+    }
+  }
+
+  /* ===== 打字机（身份标语 + 座右铭轮播，跟随语言） ===== */
+  var PHRASES = {
+    zh: [
       '汕头大学 · 生物医学工程 · 大一',
       'Stay hungry, stay foolish.',
       '但行好事，莫问前程。',
       '把简单的事做到极致，就是不简单。'
-    ];
+    ],
+    en: [
+      'Shantou University · Biomedical Engineering · Freshman',
+      'Stay hungry, stay foolish.',
+      'Do good deeds and worry not about the road ahead.',
+      'Doing simple things extraordinarily well is anything but simple.'
+    ]
+  };
+  var typingTimer = null;
+  function startTyping() {
+    var isEn = document.documentElement.getAttribute('lang') === 'en';
+    var phrases = isEn ? PHRASES.en : PHRASES.zh;
+    var el = $('#typing');
+    if (typingTimer) clearTimeout(typingTimer);
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       el.textContent = phrases[0];
       return;
@@ -946,12 +1085,72 @@
     (function tick() {
       var text = phrases[p];
       el.textContent = text.slice(0, c);
-      if (!del && c < text.length) { c++; setTimeout(tick, 110); }
-      else if (del && c > 0) { c--; setTimeout(tick, 45); }
-      else if (!del) { del = true; setTimeout(tick, 2300); }
-      else { del = false; p = (p + 1) % phrases.length; setTimeout(tick, 500); }
+      if (!del && c < text.length) { c++; typingTimer = setTimeout(tick, 110); }
+      else if (del && c > 0) { c--; typingTimer = setTimeout(tick, 45); }
+      else if (!del) { del = true; typingTimer = setTimeout(tick, 2300); }
+      else { del = false; p = (p + 1) % phrases.length; typingTimer = setTimeout(tick, 500); }
     })();
-  })();
+  }
+
+  var langBtn = $('#langBtn');
+  var page = $('.page');
+  function applyLang(lang, persist) {
+    function render() {
+      var isEn = lang === 'en';
+      document.documentElement.setAttribute('lang', isEn ? 'en' : 'zh-CN');
+      document.title = isEn ? TITLES.en : TITLES.zh;
+      if (langBtn) {
+        langBtn.textContent = isEn ? '中' : 'EN';
+        langBtn.setAttribute('aria-label', isEn ? '切换为中文' : 'Switch to English');
+      }
+      $$('[data-i18n]').forEach(function (el) {
+        var k = el.getAttribute('data-i18n');
+        if (I18N[k]) el.textContent = I18N[k][lang];
+      });
+      $$('[data-i18n-html]').forEach(function (el) {
+        var k = el.getAttribute('data-i18n-html');
+        if (I18N[k]) el.innerHTML = I18N[k][lang];
+      });
+      /* 主题按钮移动端单字（白/纸/暗 ↔ Light/Paper/Dark） */
+      $$('.tt-opt').forEach(function (b) {
+        b.setAttribute('data-short', isEn ? b.getAttribute('data-short-en') : b.getAttribute('data-short-zh'));
+      });
+      /* 汉堡菜单 aria-label（跟随语言 + 展开状态） */
+      var ham = $('#hamburger');
+      if (ham) {
+        var open = ham.classList.contains('open');
+        ham.setAttribute('aria-label', open ? (isEn ? 'Close menu' : '关闭菜单') : (isEn ? 'Open menu' : '打开菜单'));
+      }
+      renderGreeting();
+      startTyping();
+    }
+
+    if (persist) {
+      try { localStorage.setItem('intro-lang', lang); } catch (e) {}
+    }
+
+    /* 点击切换时做「淡出下沉 → 换文案 → 从下方浮起」；初始化或减少动态偏好则直接切换 */
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (persist && !reduced) {
+      page.classList.add('lang-out');
+      setTimeout(function () {
+        render();
+        page.classList.remove('lang-out');
+        page.classList.add('lang-in');
+        setTimeout(function () {
+          page.classList.remove('lang-in');
+        }, 830);
+      }, 170);
+    } else {
+      render();
+    }
+  }
+  langBtn.addEventListener('click', function () {
+    var cur = document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'zh';
+    applyLang(cur === 'en' ? 'zh' : 'en', true);
+  });
+  /* 首屏：沿用 head 里已恢复的语言，没有则默认中文 */
+  applyLang(document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'zh', false);
 
   /* ===== 导航滚动态 ===== */
   var nav = $('#nav');
@@ -966,7 +1165,8 @@
       var open = menu.classList.toggle('open');
       btn.classList.toggle('open', open);
       btn.setAttribute('aria-expanded', String(open));
-      btn.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+      var isEn = document.documentElement.getAttribute('lang') === 'en';
+      btn.setAttribute('aria-label', open ? (isEn ? 'Close menu' : '关闭菜单') : (isEn ? 'Open menu' : '打开菜单'));
     });
     $$('#navMenu a').forEach(function (a) {
       a.addEventListener('click', function () {

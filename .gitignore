@@ -1,0 +1,7 @@
+# 排除工作区元数据，不发布到 Pages
+.workbuddy/
+
+# 系统文件
+Thumbs.db
+desktop.ini
+.DS_Store

@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="apple">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>黎同学 · 个人介绍</title>
+<script>
+  /* 主题记忆：进入页面先恢复上次选择，避免闪烁；未选择过则用默认主题（简白） */
+  (function () {
+    var DEFAULT_THEME = 'apple';
+    var t = null;
+    try { t = localStorage.getItem('intro-theme'); } catch (e) {}
+    if (t !== 'apple' && t !== 'claude' && t !== 'dark') t = DEFAULT_THEME;
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<style>
+  /* ============ 共享基础令牌 ============ */
+  :root {
+    --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+                 "PingFang SC", "Microsoft YaHei", sans-serif;
+    --font-mono-glyph: Georgia, "Songti SC", "SimSun", serif;
+    --max-width: 900px;
+    --radius-pill: 980px;
+  }
+
+  /* ============ 主题一：暖纸（羊皮纸底 · 赤陶橙 · 衬线标题） ============ */
+  [data-theme="claude"] {
+    --bg: #faf9f5;
+    --bg-alt: #f5f4ed;
+    --card: #faf9f5;
+    --text: #141413;
+    --text-2: #5e5d59;
+    --text-3: #87867f;
+    --accent: #c96442;
+    --accent-2: #d97757;
+    --accent-contrast: #faf9f5;
+    --hairline: #eceade;
+    --hairline-strong: #e8e6dc;
+    --shadow-rest: 0 4px 24px rgba(0, 0, 0, .05);
+    --shadow-lift: 0 12px 32px rgba(0, 0, 0, .10);
+    --ring: rgba(201, 100, 66, .16);
+    --glow: rgba(201, 100, 66, .28);
+    --hero-glow: rgba(201, 100, 66, .07);
+    --nav-bg: rgba(250, 249, 245, .72);
+    --nav-panel: rgba(250, 249, 245, .94);
+    --selection: rgba(201, 100, 66, .18);
+    --dot-ring: rgba(201, 100, 66, .15);
+    --radius-card: 16px;
+    --font-display: Georgia, "Songti SC", "SimSun", serif;
+    --w-display: 500;
+    --track-display: 0;
+    --h1-size: clamp(2.2rem, 6vw, 3.6rem);
+    --h2-size: clamp(1.75rem, 3.6vw, 2.4rem);
+    --value-font: Georgia, "Songti SC", "SimSun", serif;
+  }
+
+  /* ============ 主题二：简白（纯白底 · 苹果蓝 · 重黑体标题） ============ */
+  [data-theme="apple"] {
+    --bg: #ffffff;
+    --bg-alt: #f5f5f7;
+    --card: #ffffff;
+    --text: #1d1d1f;
+    --text-2: #6e6e73;
+    --text-3: #86868b;
+    --accent: #0071e3;
+    --accent-2: #0077ed;
+    --accent-contrast: #ffffff;
+    --hairline: rgba(0, 0, 0, .08);
+    --hairline-strong: rgba(0, 0, 0, .10);
+    --shadow-rest: 0 2px 12px rgba(0, 0, 0, .04);
+    --shadow-lift: 0 12px 32px rgba(0, 0, 0, .10);
+    --ring: rgba(0, 113, 227, .18);
+    --glow: rgba(0, 113, 227, .25);
+    --hero-glow: rgba(0, 113, 227, .07);
+    --nav-bg: rgba(255, 255, 255, .72);
+    --nav-panel: rgba(255, 255, 255, .94);
+    --selection: rgba(0, 113, 227, .18);
+    --dot-ring: rgba(0, 113, 227, .15);
+    --radius-card: 22px;
+    --font-display: Georgia, "Songti SC", "SimSun", serif;
+    --w-display: 500;
+    --track-display: 0;
+    --h1-size: clamp(2.2rem, 6vw, 3.6rem);
+    --h2-size: clamp(1.75rem, 3.6vw, 2.4rem);
+    --value-font: Georgia, "Songti SC", "SimSun", serif;
+  }
+
+  /* ============ 主题三：暗色（深空底 · Trae 荧光绿 · 半透明卡片） ============ */
+  /* 配色取自 Trae 官网真实设计令牌，字体/圆角/布局与既有主题完全一致 */
+  [data-theme="dark"] {
+    --bg: #0a0b0d;
+    --bg-alt: #121314;
+    --card: #121314;
+    --text: #f5f9fe;
+    --text-2: #a6aab5;
+    --text-3: #787d87;
+    --accent: #32f08c;
+    --accent-2: #0fdc78;
+    --accent-contrast: #0a0b0d;
+    --hairline: rgba(255, 255, 255, .06);
+    --hairline-strong: rgba(255, 255, 255, .12);
+    --shadow-rest: 0 4px 24px rgba(0, 0, 0, .5);
+    --shadow-lift: 0 12px 32px rgba(0, 0, 0, .6);
+    --ring: rgba(50, 240, 140, .18);
+    --glow: rgba(50, 240, 140, .30);
+    --hero-glow: rgba(50, 240, 140, .07);
+    --nav-bg: rgba(10, 11, 13, .72);
+    --nav-panel: rgba(10, 11, 13, .94);
+    --selection: rgba(50, 240, 140, .22);
+    --dot-ring: rgba(50, 240, 140, .16);
+    --radius-card: 16px;
+    /* 以下 6 项与既有主题一致，因 :root 未定义故必须重复声明 */
+    --font-display: Georgia, "Songti SC", "SimSun", serif;
+    --w-display: 500;
+    --track-display: 0;
+    --h1-size: clamp(2.2rem, 6vw, 3.6rem);
+    --h2-size: clamp(1.75rem, 3.6vw, 2.4rem);
+    --value-font: Georgia, "Songti SC", "SimSun", serif;
+  }
+
+  /* 暗色专用微调：卡片改用半透明叠加层，呼应 Trae 的层次做法 */
+  [data-theme="dark"] .skill-card,
+  [data-theme="dark"] .contact-chip {
+    background: rgba(255, 255, 255, .04);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  /* 暗色下硬编码黑色阴影不可见，单独加深 */
+  [data-theme="dark"] .tt-thumb { box-shadow: 0 1px 4px rgba(0, 0, 0, .6); }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .35s ease, color .35s ease;
+  }
+
+  ::selection { background: var(--selection); }
+
+  /* ============ 顶部导航（毛玻璃，固定） ============ */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s ease, background-color .35s ease;
+  }
+  nav.scrolled { border-bottom-color: var(--hairline); }
+
+  .nav-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 22px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: var(--w-display);
+    color: var(--text);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .nav-links { display: flex; gap: 26px; list-style: none; }
+
+  .nav-links a {
+    font-size: 13px;
+    color: var(--text-2);
+    text-decoration: none;
+    transition: color .2s ease;
+  }
+
+  .nav-actions { display: flex; align-items: center; gap: 10px; }
+
+  /* ===== 主题切换（暖纸 / 简白）· 弹簧滑块 ===== */
+  .theme-toggle {
+    --tt-w: 54px;
+    position: relative;
+    display: flex;
+    padding: 3px;
+    background: var(--bg-alt);
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius-pill);
+    overflow: hidden; /* 回弹过冲被裁在轨道内，不再越出边框 */
+  }
+  .tt-thumb {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: var(--tt-w);
+    border-radius: var(--radius-pill);
+    background: var(--accent);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .15);
+    transform: translateX(0);
+    transition: transform .55s cubic-bezier(.34, 1.56, .64, 1),
+                background-color .35s ease;
+    will-change: transform;
+  }
+  /* 档位顺序：简白(apple) → 暖纸(claude) → 暗色(dark) */
+  [data-theme="claude"] .theme-toggle .tt-thumb { transform: translateX(var(--tt-w)); }
+  [data-theme="dark"]   .theme-toggle .tt-thumb { transform: translateX(calc(var(--tt-w) * 2)); }
+  /* 按下轻微压扁，松开后借弹簧曲线回稳 */
+  .theme-toggle:active .tt-thumb { transform: translateX(0) scale(.96); }
+  [data-theme="claude"] .theme-toggle:active .tt-thumb { transform: translateX(var(--tt-w)) scale(.96); }
+  [data-theme="dark"]   .theme-toggle:active .tt-thumb { transform: translateX(calc(var(--tt-w) * 2)) scale(.96); }
+  .tt-opt {
+    position: relative;
+    z-index: 1;
+    width: var(--tt-w);
+    text-align: center;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-2);
+    padding: 4px 0;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: color .3s ease;
+  }
+  .tt-opt.active { color: var(--accent-contrast); }
+  /* 焦点环画在按钮内侧，避免被轨道裁剪 */
+  .theme-toggle .tt-opt:focus-visible { outline-offset: -3px; }
+
+  /* ===== 移动端汉堡菜单 ===== */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px; height: 44px;
+    padding: 0 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  .hamburger span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: var(--text);
+    border-radius: 1px;
+    transition: transform .3s ease, opacity .3s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ============ Hero ============ */
+  .hero {
+    position: relative;
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 150px 22px 90px;
+    background:
+      radial-gradient(ellipse 62% 46% at 50% 0%, var(--hero-glow), transparent 70%),
+      var(--bg);
+    transition: background-color .35s ease;
+  }
+
+  .avatar {
+    width: 112px; height: 112px;
+    border-radius: 50%;
+    margin: 0 auto 26px;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-family: var(--font-mono-glyph);
+    font-size: 44px;
+    font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-rest);
+    transition: transform .3s cubic-bezier(.22, 1, .36, 1), box-shadow .3s ease;
+  }
+
+  .hero-greeting {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-weight: var(--w-display);
+    letter-spacing: var(--track-display);
+    font-size: var(--h1-size);
+    line-height: 1.14;
+    max-width: 16em;
+  }
+
+  .typing-line {
+    margin-top: 22px;
+    font-size: clamp(17px, 2.4vw, 22px);
+    color: var(--text-2);
+    min-height: 1.7em;
+  }
+  .typing-line .cursor {
+    color: var(--accent);
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .hero-cta {
+    margin-top: 40px;
+    display: inline-block;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: var(--radius-pill);
+    transition: background .2s ease, transform .2s ease;
+  }
+  .hero-cta:active { transform: scale(.98); }
+
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--text-3);
+    font-size: 22px;
+    animation: hintFloat 2.2s ease-in-out infinite;
+  }
+  @keyframes hintFloat {
+    0%, 100% { transform: translate(-50%, 0); opacity: .5; }
+    50%      { transform: translate(-50%, 8px); opacity: 1; }
+  }
+
+  /* Hero 入场编排：文字淡入上移，可悬停元素只做透明度（不锁 transform） */
+  .hero .avatar        { animation: heroFade .9s ease both; }
+  .hero-greeting       { animation: heroIn  .8s .10s cubic-bezier(.25,.8,.3,1) both; }
+  .hero h1             { animation: heroIn  .8s .20s cubic-bezier(.25,.8,.3,1) both; }
+  .typing-line         { animation: heroIn  .8s .38s cubic-bezier(.25,.8,.3,1) both; }
+  .hero-cta            { animation: heroFade .9s .55s ease both; }
+  .hero-scroll-hint    { animation: heroFade .8s .50s ease both, hintFloat 2.2s 1.4s ease-in-out infinite; }
+  @keyframes heroIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes heroFade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ============ 通用 Section ============ */
+  section {
+    padding: 104px 22px;
+    scroll-margin-top: 66px;
+    transition: background-color .35s ease;
+  }
+  .section-alt { background: var(--bg-alt); }
+  .section-inner { max-width: var(--max-width); margin: 0 auto; }
+
+  /* ============ 板块内的下滑引导箭头（仅装饰，不可点） ============ */
+  /* 「关于我」需要相对定位承载箭头 */
+  #about { position: relative; }
+
+  .section-scroll-hint {
+    display: none;           /* 移动端默认不显示 */
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--text-3);
+    font-size: 22px;
+    line-height: 1;
+    pointer-events: none;    /* 纯引导，不接收鼠标事件 */
+    animation: hintFloat 2.2s ease-in-out infinite;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-weight: var(--w-display);
+    letter-spacing: var(--track-display);
+    font-size: var(--h2-size);
+    line-height: 1.18;
+    margin-bottom: 14px;
+  }
+
+  .section-lead {
+    font-size: 18px;
+    color: var(--text-2);
+    max-width: 36em;
+    margin-bottom: 52px;
+  }
+
+  /* ============ 关于我 ============ */
+  .about-text {
+    font-size: 17px;
+    letter-spacing: -.01em;
+    line-height: 1.75;
+    max-width: 36em;
+  }
+  .about-text + .about-text { margin-top: 20px; }
+
+  /* ============ 基本信息（规格表） ============ */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--hairline);
+  }
+  .info-item {
+    display: grid;
+    grid-template-columns: 104px 1fr;
+    gap: 16px;
+    padding: 22px 8px;
+    border-bottom: 1px solid var(--hairline);
+    align-items: baseline;
+  }
+  .info-item:nth-child(odd) { border-right: 1px solid var(--hairline); padding-right: 32px; }
+  .info-item:nth-child(even) { padding-left: 32px; }
+  .info-item.wide { grid-column: 1 / -1; border-right: none; padding-right: 8px; }
+
+  .info-label { font-size: 13px; color: var(--text-3); font-weight: 500; }
+  .info-value {
+    font-family: var(--value-font);
+    font-size: 17.5px;
+    font-weight: 500;
+    letter-spacing: -.01em;
+    word-break: break-word;
+  }
+  .info-value .sub {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--text-2);
+    margin-top: 3px;
+  }
+
+  /* ============ 时间线（教育经历） ============ */
+  .timeline {
+    max-width: 640px;
+    margin-left: 6px;
+    padding-left: 28px;
+    border-left: 2px solid var(--hairline-strong);
+  }
+  .t-item { position: relative; padding-bottom: 36px; }
+  .t-item:last-child { padding-bottom: 0; }
+
+  .t-dot {
+    position: absolute;
+    left: -35px;
+    top: 5px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--dot-ring);
+  }
+
+  .t-time { font-size: 13px; color: var(--text-3); font-weight: 500; }
+
+  .t-item h3 {
+    font-family: var(--font-display);
+    font-weight: var(--w-display);
+    letter-spacing: var(--track-display);
+    font-size: 20px;
+    margin: 4px 0 6px;
+  }
+  .t-desc { font-size: 15px; color: var(--text-2); line-height: 1.65; }
+
+  /* ============ 技能卡片与标签 ============ */
+  .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  .skill-card {
+    background: var(--card);
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius-card);
+    padding: 34px 30px;
+    box-shadow: var(--shadow-rest);
+    transition: transform .25s ease, box-shadow .25s ease, background-color .35s ease;
+  }
+
+  .skill-icon { margin-bottom: 16px; line-height: 0; }
+  .skill-icon svg { width: 34px; height: 34px; display: block; fill: var(--accent); }
+  .skill-card h3 {
+    font-family: var(--font-display);
+    font-weight: var(--w-display);
+    letter-spacing: var(--track-display);
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .skill-card p { font-size: 15px; color: var(--text-2); line-height: 1.6; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 34px; }
+  .tag {
+    padding: 8px 18px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--hairline-strong);
+    font-size: 14.5px;
+    color: var(--text-2);
+    background: transparent;
+    transition: all .25s ease;
+  }
+
+  /* ============ 联系 ============ */
+  .contact-inner { text-align: center; }
+  .contact-inner .section-lead { margin-left: auto; margin-right: auto; }
+
+  .contact-links {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .contact-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15.5px;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+    background: var(--card);
+    border: 1px solid var(--hairline-strong);
+    padding: 12px 24px;
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-rest);
+    transition: transform .2s ease, box-shadow .2s ease, background-color .35s ease;
+  }
+  .contact-chip .icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    fill: currentColor;
+  }
+  .contact-note {
+    margin-top: 26px;
+    font-size: 13.5px;
+    color: var(--text-3);
+  }
+
+  /* ============ 页脚 ============ */
+  footer {
+    background: var(--bg);
+    border-top: 1px solid var(--hairline);
+    padding: 30px 22px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-3);
+    transition: background-color .35s ease;
+  }
+
+  /* ============ 悬停效果（仅指针设备；触屏不套用，避免悬停粘滞） ============ */
+  @media (hover: hover) {
+    .nav-links a:hover { color: var(--text); }
+    .avatar:hover {
+      transform: scale(1.06) rotate(-3deg);
+      box-shadow: var(--shadow-rest),
+                  0 0 0 6px var(--ring),
+                  0 12px 36px var(--glow);
+    }
+    .hero-cta:hover { background: var(--accent-2); transform: scale(1.03); }
+    .skill-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+    .tag:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-contrast);
+      transform: translateY(-2px);
+    }
+    .contact-chip:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--ring); }
+  }
+
+  /* ============ 滚动渐入 ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity .7s cubic-bezier(.22, 1, .36, 1),
+                transform .7s cubic-bezier(.22, 1, .36, 1);
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ============ 焦点可达性 ============ */
+  a:focus-visible, button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+
+  /* ============ 移动端交互适配 ============ */
+  /* 去掉浏览器点按灰块；禁掉控件上的双击缩放 */
+  a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  /* 防长按选中按钮/胶囊上的文字 */
+  button, .tag, .contact-chip { -webkit-user-select: none; user-select: none; }
+
+  /* ============ 响应式 ============ */
+  /* 板块内下箭头仅在桌面端（≥641px）显示 */
+  @media (min-width: 641px) {
+    .section-scroll-hint { display: block; }
+  }
+
+  @media (max-width: 640px) {
+    .hamburger { display: flex; }
+    /* 主题切换器：收窄到单字宽度 */
+    .theme-toggle { --tt-w: 34px; }
+    /* 藏掉原文字（暖纸/简白/暗色），改用 data-short 单字显示 */
+    .tt-opt { font-size: 0; padding: 4px 0; }
+    .tt-opt::before { content: attr(data-short); font-size: 11px; }
+    /* 压缩导航内距，为切换器腾出空间 */
+    .nav-inner { padding: 0 16px; }
+    .nav-actions { gap: 8px; }
+
+    .nav-links {
+      position: absolute;
+      top: 100%; left: 0; right: 0;
+      flex-direction: column;
+      gap: 0;
+      background: var(--nav-panel);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      backdrop-filter: blur(18px) saturate(160%);
+      border-bottom: 1px solid var(--hairline-strong);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+      opacity: 0;
+      transform: translateY(-10px);
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .35s cubic-bezier(.22, 1, .36, 1),
+                  transform .35s cubic-bezier(.22, 1, .36, 1),
+                  visibility 0s linear .35s;
+    }
+    .nav-links.open {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity .35s cubic-bezier(.22, 1, .36, 1),
+                  transform .35s cubic-bezier(.22, 1, .36, 1),
+                  visibility 0s;
+    }
+    .nav-links li {
+      border-top: 1px solid var(--hairline);
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity .3s ease, transform .3s ease;
+    }
+    .nav-links.open li { opacity: 1; transform: translateY(0); }
+    .nav-links.open li:nth-child(1) { transition-delay: .04s; }
+    .nav-links.open li:nth-child(2) { transition-delay: .08s; }
+    .nav-links.open li:nth-child(3) { transition-delay: .12s; }
+    .nav-links.open li:nth-child(4) { transition-delay: .16s; }
+    .nav-links.open li:nth-child(5) { transition-delay: .20s; }
+    .nav-links.open li:nth-child(6) { transition-delay: .24s; }
+    /* 暗色下加深面板阴影，否则黑阴影在深底上不可见 */
+    [data-theme="dark"] .nav-links { box-shadow: 0 8px 24px rgba(0, 0, 0, .6); }
+    .nav-links a { display: block; padding: 14px 22px; font-size: 15px; }
+
+    .hero { min-height: 88vh; padding: 120px 20px 70px; }
+    .hero h1 { max-width: none; }
+    section { padding: 76px 20px; }
+    .info-grid { grid-template-columns: 1fr; }
+    .info-item:nth-child(odd) { border-right: none; padding-right: 8px; }
+    .info-item:nth-child(even) { padding-left: 8px; }
+    .info-item { grid-template-columns: 92px 1fr; }
+  }
+
+  /* ============ 点击爱心（JS 生成，跟随主题强调色） ============ */
+  .click-heart {
+    position: fixed;
+    left: 0; top: 0;
+    width: 10px; height: 10px;
+    background: var(--accent);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%) rotate(45deg);
+    will-change: transform, opacity;
+  }
+  .click-heart::before,
+  .click-heart::after {
+    content: "";
+    position: absolute;
+    width: 100%; height: 100%;
+    background: inherit;
+    border-radius: 50%;
+  }
+  .click-heart::before { top: -50%; left: 0; }
+  .click-heart::after  { top: 0; left: -50%; }
+
+  /* ============ 减少动态偏好 ============ */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= 导航 ================= -->
+<nav id="nav" aria-label="页面导航">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#top">黎同学</a>
+    <ul class="nav-links" id="navMenu">
+      <li><a href="#about">关于</a></li>
+      <li><a href="#info">信息</a></li>
+      <li><a href="#edu">教育</a></li>
+      <li><a href="#skills">日常</a></li>
+      <li><a href="#contact">联系</a></li>
+    </ul>
+    <div class="nav-actions">
+      <div class="theme-toggle" role="group" aria-label="外观主题切换">
+        <span class="tt-thumb" aria-hidden="true"></span>
+        <button type="button" class="tt-opt active" data-set="apple" data-short="白" aria-label="简白主题" aria-pressed="true">简白</button>
+        <button type="button" class="tt-opt" data-set="claude" data-short="纸" aria-label="暖纸主题" aria-pressed="false">暖纸</button>
+        <button type="button" class="tt-opt" data-set="dark" data-short="暗" aria-label="暗色主题" aria-pressed="false">暗色</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="打开菜单" aria-expanded="false" aria-controls="navMenu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= Hero ================= -->
+<header class="hero" id="top">
+  <div class="avatar" aria-hidden="true">黎</div>
+  <p class="hero-greeting" id="greeting">你好 👋</p>
+  <h1>学一点，做一点，<br>离想做的事近一点。</h1>
+  <p class="typing-line" aria-label="个人标语"><span id="typing"></span><span class="cursor" aria-hidden="true">|</span></p>
+  <a class="hero-cta" href="#about">认识一下我</a>
+  <span class="hero-scroll-hint" aria-hidden="true">⌄</span>
+</header>
+
+<!-- ================= 关于我 ================= -->
+<section class="section-alt" id="about">
+  <div class="section-inner reveal">
+    <h2>关于我</h2>
+    <p class="about-text">
+      黎同学，汕头大学 2026 级生物医学工程，大一。
+    </p>
+    <p class="about-text">
+      对这个专业有兴趣，更喜欢能动手的那部分。
+    </p>
+    <p class="about-text">
+      性格偏 i，人多的场合话不多，熟了之后另说。
+    </p>
+  </div>
+  <span class="section-scroll-hint" aria-hidden="true">⌄</span>
+</section>
+
+<!-- ================= 基本信息 ================= -->
+<section id="info">
+  <div class="section-inner reveal">
+    <h2>基本信息</h2>
+    <p class="section-lead">一些关于我的基本事实。</p>
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="info-label">怎么称呼</span>
+        <span class="info-value">黎同学</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">学校</span>
+        <span class="info-value">汕头大学</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">专业</span>
+        <span class="info-value">生物医学工程<span class="sub">2026 级 · 本科在读</span></span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">年级</span>
+        <span class="info-value">大一</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">家乡</span>
+        <span class="info-value">中国 · 惠州市</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">爱好</span>
+        <span class="info-value">科技数码 · 摄影 · 篮球 · 足球 · 游戏 · 小说</span>
+      </div>
+      <div class="info-item wide">
+        <span class="info-label">座右铭</span>
+        <span class="info-value">Stay hungry, stay foolish.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 教育经历 ================= -->
+<section class="section-alt" id="edu">
+  <div class="section-inner reveal">
+    <h2>教育经历</h2>
+    <div class="timeline">
+      <div class="t-item">
+        <span class="t-dot"></span>
+        <p class="t-time">2026 年 — 至今</p>
+        <h3>汕头大学 · 生物医学工程 · 本科在读</h3>
+        <p class="t-desc">大一在读，成长ing。</p>
+      </div>
+      <div class="t-item">
+        <span class="t-dot"></span>
+        <p class="t-time">2023 年 — 2026 年</p>
+        <h3>高中 · 理科</h3>
+        <p class="t-desc">理科方向。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 技能与方向 ================= -->
+<section id="skills">
+  <div class="section-inner reveal">
+    <h2>兴趣与日常</h2>
+    <p class="section-lead">一些零碎的标签，拼凑出一个大概的我。</p>
+    <div class="skill-grid">
+      <div class="skill-card">
+        <div class="skill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 1v2h2V1zm4 0v2h2V1zM9 21v2h2v-2zm4 0v2h2v-2zM1 9h2v2H1zm0 4h2v2H1zm20-4h2v2h-2zm0 4h2v2h-2zM5 5h14v14H5zM7 7v10h10V7zm2 2h6v6H9z"/></svg></div>
+        <h3>科技与 AI</h3>
+        <p>喜欢科技数码，对 AI 感兴趣——平时玩各种大模型、关注点行业新闻。</p>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12l3.5 9.5c.6 1.7-.6 3.5-2.4 3.5h-1.3c-.8 0-1.5-.5-1.8-1.2L15.4 16H8.6l-.6 1.8c-.3.7-1 1.2-1.8 1.2H4.9c-1.8 0-3-1.8-2.4-3.5L6 6zm1.5 3v1.5H6V12h1.5v1.5H9V12h1.5v-1.5H9V9H7.5zm8.75.75a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8zm2.2 2.2a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8z"/></svg></div>
+        <h3>游戏与运动</h3>
+        <p>手游打王者荣耀和星穹铁道，也玩 Steam 上的端游；偶尔去打球，篮球足球都可以。对我来说都是放松。</p>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6a1 1 0 0 1 1 1v1h2a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2V4a1 1 0 0 1 1-1zm-1 4H6v11h12V7zm1-2v1h4V5zm3 4.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zm0 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg></div>
+        <h3>拍照与影音</h3>
+        <p>喜欢拍照，随手记录点东西；听歌偏爱 R&amp;B，也看小说，偶尔翻点学习类的书。</p>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag">科技数码</span>
+      <span class="tag">AI</span>
+      <span class="tag">摄影</span>
+      <span class="tag">篮球</span>
+      <span class="tag">足球</span>
+      <span class="tag">王者荣耀</span>
+      <span class="tag">星穹铁道</span>
+      <span class="tag">Steam 端游</span>
+      <span class="tag">R&amp;B</span>
+      <span class="tag">小说</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 联系 ================= -->
+<section class="contact-inner section-alt" id="contact">
+  <div class="section-inner reveal">
+    <h2>保持联系</h2>
+    <p class="section-lead">
+      没什么特别要说的，欢迎随便聊聊。
+    </p>
+    <div class="contact-links">
+      <a class="contact-chip" href="#" id="mail-chip">
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/></svg><span>邮箱</span>
+      </a>
+      <a class="contact-chip" href="https://github.com/Likr715" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg><span>GitHub</span>
+      </a>
+    </div>
+    <p class="contact-note">邮箱看到就会回，不过我课多，慢半拍别急。</p>
+  </div>
+</section>
+
+<footer>
+  © <span id="year"></span> 黎同学 · 生物医学工程
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (s) { return document.querySelector(s); };
+  var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+
+  /* ===== 主题切换（简白 / 暖纸 / 暗色） =====
+     默认主题为 apple（简白）；只有用户点击时才写入 localStorage，
+     这样首次访问用默认值，刷新与后续访问都保持上次选择。 */
+  var DEFAULT_THEME = 'apple';
+  var ttOpts = $$('.tt-opt');
+  function applyTheme(t, persist) {
+    document.documentElement.setAttribute('data-theme', t);
+    if (persist) {
+      try { localStorage.setItem('intro-theme', t); } catch (e) {}
+    }
+    ttOpts.forEach(function (b) {
+      var on = b.getAttribute('data-set') === t;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+  ttOpts.forEach(function (b) {
+    b.addEventListener('click', function () {
+      applyTheme(b.getAttribute('data-set'), true);
+    });
+  });
+  /* 首屏：沿用 head 里已恢复的主题，没有则回落到默认值 */
+  applyTheme(document.documentElement.getAttribute('data-theme') || DEFAULT_THEME, false);
+
+  /* ===== 页脚年份 ===== */
+  $('#year').textContent = new Date().getFullYear();
+
+  /* ===== 按时间问候 ===== */
+  (function () {
+    var h = new Date().getHours();
+    var g = h < 6 ? '夜深了 🌙' :
+            h < 11 ? '早上好 ☀️' :
+            h < 14 ? '中午好 🌤️' :
+            h < 18 ? '下午好 🌇' : '晚上好 🌆';
+    $('#greeting').textContent = g + '，欢迎来到我的主页';
+  })();
+
+  /* ===== 打字机（身份标语 + 座右铭轮播） ===== */
+  (function () {
+    var el = $('#typing');
+    var phrases = [
+      '汕头大学 · 生物医学工程 · 大一',
+      'Stay hungry, stay foolish.',
+      '但行好事，莫问前程。',
+      '把简单的事做到极致，就是不简单。'
+    ];
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.textContent = phrases[0];
+      return;
+    }
+    var p = 0, c = 0, del = false;
+    (function tick() {
+      var text = phrases[p];
+      el.textContent = text.slice(0, c);
+      if (!del && c < text.length) { c++; setTimeout(tick, 110); }
+      else if (del && c > 0) { c--; setTimeout(tick, 45); }
+      else if (!del) { del = true; setTimeout(tick, 2300); }
+      else { del = false; p = (p + 1) % phrases.length; setTimeout(tick, 500); }
+    })();
+  })();
+
+  /* ===== 导航滚动态 ===== */
+  var nav = $('#nav');
+  window.addEventListener('scroll', function () {
+    nav.classList.toggle('scrolled', window.scrollY > 8);
+  }, { passive: true });
+
+  /* ===== 移动端菜单开关 ===== */
+  (function () {
+    var btn = $('#hamburger'), menu = $('#navMenu');
+    btn.addEventListener('click', function () {
+      var open = menu.classList.toggle('open');
+      btn.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+    });
+    $$('#navMenu a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        menu.classList.remove('open');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  })();
+
+  /* ===== 滚动渐入（尊重减少动态偏好） ===== */
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    $$('.reveal').forEach(function (el) { io.observe(el); });
+  })();
+
+  /* ===== 邮箱地址运行时组装（HTML 源码不留明文，挡静态爬虫） ===== */
+  (function () {
+    var chip = $('#mail-chip');
+    var parts = ['26krli', 'stu.edu', 'cn'];
+    chip.href = 'mai' + 'lto:' + parts[0] + '@' + parts[1] + '.' + parts[2];
+  })();
+
+  /* ===== 刷新后清除 URL 中的井号锚点，回到页面顶部 ===== */
+  (function () {
+    if (!location.hash) return;
+    try {
+      history.replaceState(null, '', location.pathname + location.search);
+    } catch (e) {
+      /* file:// 等环境下 replaceState 可能受限，忽略即可 */
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  })();
+
+  /* ===== 点击爱心（仅桌面/指针设备；颜色跟随主题 --accent） ===== */
+  (function () {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var hearts = [];
+    var raf = null;
+
+    function tick() {
+      for (var i = hearts.length - 1; i >= 0; i--) {
+        var h = hearts[i];
+        h.y -= h.vy;
+        h.vy *= 0.99;
+        h.scale += 0.004;
+        h.alpha -= 0.013;
+        if (h.alpha <= 0) {
+          if (h.el.parentNode) h.el.parentNode.removeChild(h.el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        h.el.style.transform =
+          'translate(' + h.x + 'px,' + h.y + 'px) translate(-50%,-50%) ' +
+          'rotate(45deg) scale(' + h.scale + ')';
+        h.el.style.opacity = h.alpha;
+      }
+      raf = hearts.length ? requestAnimationFrame(tick) : null;
+    }
+
+    function spawn(x, y) {
+      var el = document.createElement('span');
+      el.className = 'click-heart';
+      document.body.appendChild(el);
+      hearts.push({ el: el, x: x, y: y, scale: 1, alpha: 1, vy: 1 });
+      if (!raf) raf = requestAnimationFrame(tick);
+    }
+
+    document.addEventListener('click', function (e) {
+      spawn(e.clientX, e.clientY);
+    });
+  })();
+})();
+</script>
+
+</body>
+</html>

@@ -173,14 +173,6 @@
     padding-left: 15px;
     scrollbar-gutter: stable;
   }
-  /* 覆盖式滚动条（macOS Chrome/Safari、Windows Edge overlay 模式）：
-     padding-left 会变成一条白边，必须清零。上面那条先给兼容所有环境的默认值，
-     这条用特性查询把它关掉。
-     用 scrollbar-width 而非 ::-webkit-scrollbar：后者会让整段规则在 Firefox 中失效，
-     导致 padding-left 永远取消不掉。 */
-  @supports (scrollbar-width: thin) {
-    html { padding-left: 0; }
-  }
 
   body {
     font-family: var(--font-body);
@@ -193,6 +185,17 @@
     /* html 的 padding-left 会挤窄 body；把自身宽度钉住（抵消 box-sizing: border-box），
        确保锁滚动前后主文档宽度完全不变，页内居中内容不会横向跳动。 */
     width: calc(100% + 15px);
+  }
+  /* 本块必须放在上面 html / body 规则【之后】：同为元素选择器、同优先级，靠后者胜出。
+     （第一版把它放在 body 规则之前，结果 body 的 width 被覆盖，横向滚动条依旧。）
+     滚动条宽度补偿只该在「不支持 scrollbar-gutter」的老环境里做。原先用
+     @supports (scrollbar-width: thin) 判断，但该特性现代 Chromium 也支持（不只是 macOS
+     覆盖式滚动条），于是 padding-left 被清零、body 的 +15px 还在 → body 比视口宽 15px
+     → Windows 桌面端多出一条横向滚动条（实测 docScrollW 1600 vs clientW 1585）。
+     改用 scrollbar-gutter 判断：支持它就说明槽位由 scrollbar-gutter 负责，无需补偿。 */
+  @supports (scrollbar-gutter: stable) {
+    html { padding-left: 0; }
+    body { width: 100%; }
   }
   /* 语言切换过渡：双层幕布从底部升起（浅色层追着主层跑），盖满后换文案，再先后向上穿出 */
   .curtain {
@@ -517,6 +520,8 @@
   /* ============ 通用 Section ============ */
   section {
     padding: 104px 22px;
+    /* 跳转落点预留：66px = 导航 55px + 11px 间距。移动端保持此值（用户确认移动端表现正常）。
+       桌面端在下方媒体查询里改为 55px，原因见那里的注释。 */
     scroll-margin-top: 66px;
     transition: background-color .35s ease;
   }
@@ -732,6 +737,21 @@
     .contact-chip:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--ring); }
     .photo-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
     .photo-item:hover img { opacity: .92; }
+  }
+
+  /* ===== 桌面端跳转落点修正（仅 ≥641px；移动端按用户反馈「正常」，不动）=====
+     两个问题叠加，只在桌面端显形：
+     1) section 的 padding-top 是 104px（窄屏 76px），跳转后标题上方空白偏多（实测 h2Top=170）；
+     2) scroll-margin-top 是 66px，而固定导航实测仅 55px 高 —— 于是导航下沿还会露出 11px
+        的「上一块」内容，看起来像没对准（实测 photosTop=65.97，导航底边 55）。
+     改法：padding-top 对齐窄屏的 76px；scroll-margin-top 对齐导航高度 55px，
+     使目标区块的上边缘正好贴住导航下沿 —— 导航以下全部属于目标区块，上一块内容不可见。
+     实测（1600×900）：photosTop=54.97（导航底 55）、stripBelowNav=-0.03、h2Top=131。 */
+  @media (min-width: 641px) {
+    section {
+      padding: 76px 22px;
+      scroll-margin-top: 55px;
+    }
   }
 
   /* ============ 滚动渐入 ============ */
@@ -1128,7 +1148,7 @@
 </section>
 
 <!-- ================= 摄影画廊 · 3 张实拍 ================= -->
-<section id="photos">
+  <section class="section-alt" id="photos">
   <div class="section-inner reveal">
     <h2 data-i18n="photos.title">摄影画廊</h2>
     <p class="section-lead" data-i18n="photos.lead">随手拍下的一些画面，点开可以看大图。</p>
@@ -1153,7 +1173,7 @@
 </section>
 
 <!-- ================= 联系 ================= -->
-<section class="contact-inner section-alt" id="contact">
+  <section class="contact-inner" id="contact">
   <div class="section-inner reveal">
     <h2 data-i18n="contact.title">保持联系</h2>
     <p class="section-lead" data-i18n="contact.lead">

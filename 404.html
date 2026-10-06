@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="apple">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>页面走丢了 · 黎同学</title>
+<meta name="robots" content="noindex">
+<style>
+  :root {
+    --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+                 "PingFang SC", "Microsoft YaHei", sans-serif;
+    --font-code: ui-monospace, "SF Mono", Menlo, Consolas, "Courier New", monospace;
+    --radius-pill: 980px;
+  }
+  [data-theme="apple"] {
+    --bg: #ffffff; --text: #1d1d1f; --text-2: #6e6e73;
+    --accent: #0071e3; --accent-contrast: #ffffff;
+  }
+  [data-theme="claude"] {
+    --bg: #faf9f5; --text: #141413; --text-2: #5e5d59;
+    --accent: #c96442; --accent-contrast: #faf9f5;
+  }
+  [data-theme="dark"] {
+    --bg: #0a0b0d; --text: #f5f9fe; --text-2: #a6aab5;
+    --accent: #32f08c; --accent-contrast: #0a0b0d;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 40px 22px;
+    font-family: var(--font-body);
+    color: var(--text); background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .35s ease, color .35s ease;
+  }
+  .code {
+    font-family: var(--font-code);
+    font-size: 96px; line-height: 1; font-weight: 500;
+    color: var(--accent); letter-spacing: .04em;
+  }
+  h1 { font-family: var(--font-body); font-size: 24px; font-weight: 500; margin: 18px 0 10px; }
+  p { font-size: 15px; color: var(--text-2); max-width: 30em; line-height: 1.7; }
+  .home {
+    margin-top: 32px; display: inline-block;
+    padding: 12px 30px; font-size: 15px; font-weight: 500;
+    text-decoration: none;
+    color: var(--accent-contrast); background: var(--accent);
+    border-radius: var(--radius-pill);
+    transition: transform .2s ease, opacity .2s ease;
+  }
+  .home:hover { transform: translateY(-2px); opacity: .92; }
+  .home:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+<script>
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('intro-theme'); } catch (e) {}
+    if (t !== 'apple' && t !== 'claude' && t !== 'dark') t = 'apple';
+    document.documentElement.setAttribute('data-theme', t);
+
+    var lang = null;
+    try { lang = localStorage.getItem('intro-lang'); } catch (e) {}
+    if (lang !== 'en') lang = 'zh';
+    document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-CN');
+    document.documentElement.setAttribute('data-lang', lang);
+  })();
+</script>
+</head>
+<body>
+  <div class="code">404</div>
+  <h1 id="t1">这里好像什么都没有</h1>
+  <p id="t2">你访问的页面走丢了，或者从来没存在过。</p>
+  <a class="home" id="homeTxt" href="https://likr715.github.io/">回到首页</a>
+<script>
+  (function () {
+    if (document.documentElement.getAttribute('data-lang') !== 'en') return;
+    document.title = 'Page not found · Li';
+    document.getElementById('t1').textContent = 'Nothing here, it seems';
+    document.getElementById('t2').textContent = "The page you're looking for is missing, or was never here.";
+    document.getElementById('homeTxt').textContent = 'Back to home';
+  })();
+</script>
+</body>
+</html>

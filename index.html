@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>黎同学 · 个人介绍</title>
+<!-- ===== SEO / 分享元信息 ===== -->
+<meta name="description" content="黎同学的个人主页 —— 汕头大学 2026 级生物医学工程在读，喜欢科技、摄影与运动，记录一点日常与想法。">
+<meta name="theme-color" content="#0071e3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0b0d" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%230071e3%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20font-family%3D%22Georgia%2Cserif%22%20font-size%3D%2218%22%20fill%3D%22%23ffffff%22%20text-anchor%3D%22middle%22%3E%E9%BB%8E%3C%2Ftext%3E%3C%2Fsvg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="黎同学">
+<meta property="og:title" content="黎同学 · 个人介绍">
+<meta property="og:description" content="汕头大学 2026 级生物医学工程在读。喜欢科技、摄影与运动，随手记一点东西。">
+<meta property="og:url" content="https://likr715.github.io/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="黎同学 · 个人介绍">
+<meta name="twitter:description" content="汕头大学 2026 级生物医学工程在读。喜欢科技、摄影与运动，随手记一点东西。">
 <script>
   /* 主题记忆：进入页面先恢复上次选择，避免闪烁；未选择过则用默认主题（简白） */
   (function () {
@@ -25,9 +38,21 @@
   :root {
     --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
                  "PingFang SC", "Microsoft YaHei", sans-serif;
-    --font-mono-glyph: Georgia, "Songti SC", "SimSun", serif;
+    /* 无衬线标题栈（简白/暗色专用，暖纸在自身主题块内保留衬线；纯系统字体，零加载、零 FOUT） */
+    --font-display-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+                         "Segoe UI Variable Display", "Segoe UI", "PingFang SC",
+                         "HarmonyOS Sans SC", "Microsoft YaHei UI", "Microsoft YaHei",
+                         "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+    --font-mono-glyph: var(--font-display-sans);
     --max-width: 900px;
     --radius-pill: 980px;
+    /* 大面卡片专用圆角（照片墙 .photo-item + 兴趣区 .skill-card 共用）：
+       两者都必须三个主题一致，故定义在 :root，刻意与按主题变化的
+       --radius-card（暖纸/暗色 16px、简白 22px）解耦。
+       历史：两处曾复用 --radius-card，导致简白(22px) 与另两主题(16px) 不一致。
+       若将来要按主题微调，在对应主题块内覆盖本变量即可。
+       命名：不用 --radius-lg，因为本文件不存在 sm/md/lg 尺寸阶梯（对比 --radius-card / --radius-pill）。 */
+    --radius-surface: 22px;
   }
 
   /* ============ 主题一：暖纸（羊皮纸底 · 赤陶橙 · 衬线标题） ============ */
@@ -52,6 +77,8 @@
     --nav-panel: rgba(250, 249, 245, .94);
     --selection: rgba(201, 100, 66, .18);
     --dot-ring: rgba(201, 100, 66, .15);
+    /* 暖纸主题保留衬线：头像「黎」字单独覆盖回衬线栈（:root 已改为无衬线） */
+    --font-mono-glyph: Georgia, "Songti SC", "SimSun", serif;
     --radius-card: 16px;
     --font-display: Georgia, "Songti SC", "SimSun", serif;
     --w-display: 500;
@@ -84,12 +111,12 @@
     --selection: rgba(0, 113, 227, .18);
     --dot-ring: rgba(0, 113, 227, .15);
     --radius-card: 22px;
-    --font-display: Georgia, "Songti SC", "SimSun", serif;
+    --font-display: var(--font-display-sans);
     --w-display: 500;
     --track-display: 0;
     --h1-size: clamp(2.2rem, 6vw, 3.6rem);
     --h2-size: clamp(1.75rem, 3.6vw, 2.4rem);
-    --value-font: Georgia, "Songti SC", "SimSun", serif;
+    --value-font: var(--font-display-sans);
   }
 
   /* ============ 主题三：暗色（深空底 · Trae 荧光绿 · 半透明卡片） ============ */
@@ -117,12 +144,12 @@
     --dot-ring: rgba(50, 240, 140, .16);
     --radius-card: 16px;
     /* 以下 6 项与既有主题一致，因 :root 未定义故必须重复声明 */
-    --font-display: Georgia, "Songti SC", "SimSun", serif;
+    --font-display: var(--font-display-sans);
     --w-display: 500;
     --track-display: 0;
     --h1-size: clamp(2.2rem, 6vw, 3.6rem);
     --h2-size: clamp(1.75rem, 3.6vw, 2.4rem);
-    --value-font: Georgia, "Songti SC", "SimSun", serif;
+    --value-font: var(--font-display-sans);
   }
 
   /* 暗色专用微调：卡片改用半透明叠加层，呼应 Trae 的层次做法 */
@@ -138,7 +165,22 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    /* 经典占位滚动条（Windows Chrome/Firefox）：宽度由环境决定，按 15px 预留。
+       用 padding 占掉滚动条那一格，使 html 内容盒子宽度恒等于「视口 − 滚动条」，
+       与滚动条是否存在无关 —— Lightbox 锁滚动时不再重排，页面不会横向跳动。 */
+    padding-left: 15px;
+    scrollbar-gutter: stable;
+  }
+  /* 覆盖式滚动条（macOS Chrome/Safari、Windows Edge overlay 模式）：
+     padding-left 会变成一条白边，必须清零。上面那条先给兼容所有环境的默认值，
+     这条用特性查询把它关掉。
+     用 scrollbar-width 而非 ::-webkit-scrollbar：后者会让整段规则在 Firefox 中失效，
+     导致 padding-left 永远取消不掉。 */
+  @supports (scrollbar-width: thin) {
+    html { padding-left: 0; }
+  }
 
   body {
     font-family: var(--font-body);
@@ -148,6 +190,9 @@
     background: var(--bg);
     -webkit-font-smoothing: antialiased;
     transition: background-color .35s ease, color .35s ease;
+    /* html 的 padding-left 会挤窄 body；把自身宽度钉住（抵消 box-sizing: border-box），
+       确保锁滚动前后主文档宽度完全不变，页内居中内容不会横向跳动。 */
+    width: calc(100% + 15px);
   }
   /* 语言切换过渡：双层幕布从底部升起（浅色层追着主层跑），盖满后换文案，再先后向上穿出 */
   .curtain {
@@ -594,7 +639,9 @@
   .skill-card {
     background: var(--card);
     border: 1px solid var(--hairline-strong);
-    border-radius: var(--radius-card);
+    /* 大面卡片圆角：与照片墙共用 --radius-surface，保证三个主题一致
+       （不再复用按主题变化的 --radius-card：暖纸/暗色 16px、简白 22px）。 */
+    border-radius: var(--radius-surface);
     padding: 34px 30px;
     box-shadow: var(--shadow-rest);
     transition: transform .25s ease, box-shadow .25s ease, background-color .35s ease;
@@ -683,6 +730,8 @@
       transform: translateY(-2px);
     }
     .contact-chip:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--ring); }
+    .photo-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+    .photo-item:hover img { opacity: .92; }
   }
 
   /* ============ 滚动渐入 ============ */
@@ -778,6 +827,10 @@
     .info-item:nth-child(odd) { border-right: none; padding-right: 8px; }
     .info-item:nth-child(even) { padding-left: 8px; }
     .info-item { grid-template-columns: 92px 1fr; }
+
+    /* 画廊：窄屏改两列，间距收紧 */
+    .photo-grid { columns: 2; column-gap: 14px; }
+    .photo-item { margin-bottom: 14px; }
   }
 
   /* ============ 点击爱心（JS 生成，跟随主题强调色） ============ */
@@ -802,6 +855,116 @@
   .click-heart::before { top: -50%; left: 0; }
   .click-heart::after  { top: 0; left: -50%; }
 
+  /* ============ 摄影画廊（CSS columns 瀑布流，零 JS 布局） ============ */
+  .photo-grid { columns: 3; column-gap: 20px; }
+  .photo-item {
+    break-inside: avoid;
+    margin: 0 0 20px;
+    /* 用大面卡片变量，不再复用按主题变化的 --radius-card：
+       否则简白主题下照片墙是 22px、暖纸/暗色是 16px，三个主题圆角不一致。 */
+    border-radius: var(--radius-surface);
+    overflow: hidden;
+    border: 1px solid var(--hairline-strong);
+    background: var(--card);
+    box-shadow: var(--shadow-rest);
+    transition: transform .25s ease, box-shadow .25s ease, background-color .35s ease;
+  }
+  .photo-item img { display: block; width: 100%; height: auto; cursor: zoom-in; }
+
+  /* ============ Lightbox ============ */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 400;
+    display: flex; align-items: center; justify-content: center;
+    /* 顶部 84 = 关闭按钮安全区：18+44=62，再留 22 间距，保证任何视口高度下
+       图片顶边都不会侵入按钮区（移动端视口矮时尤其关键）；左右下 24 与原值一致 */
+    padding: 84px 24px 24px;
+    /* 清掉 html 的左内边距，让遮罩真正铺满视口。
+       .lightbox 是 position:fixed 且已声明 inset:0，等价于「只改视觉、不影响布局」。 */
+    left: calc(-1 * 15px);
+    /* 滚动条随 html 的 overflow:hidden 一并不见时，遮罩会有约 15px 的横向抖动；
+       让它自己保留一格滚动条槽位即可抵消（与上面的 left 负偏移相互抵消）。 */
+    overflow-y: scroll;
+    /* 容器自身不做透明度过渡：opacity < 1 会把整个子树压成一个合成层，
+       关闭按钮的圆角在首次合成时可能被按矩形裁剪（Chromium 已知现象）。
+       遮罩底色、背景模糊与淡入淡出全部下放到 ::before 与 .lightbox-img。 */
+    visibility: hidden; pointer-events: none;
+    transition: visibility 0s linear .28s;
+  }
+  /* 遮罩层（含背景模糊）独立成伪元素：圆角元素不再是它的后代 */
+  .lightbox::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: rgba(0, 0, 0, .82);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    opacity: 0; transition: opacity .28s ease;
+  }
+  .lightbox.open { visibility: visible; pointer-events: auto; transition: visibility 0s; }
+  .lightbox.open::before { opacity: 1; }
+  /* 图片与说明文字同容器：说明紧贴图片下方，永不重叠 */
+  .lightbox-figure {
+    display: flex; flex-direction: column;
+    align-items: center;
+    margin: 0; min-height: 0;
+    max-width: min(92vw, 1100px);
+    max-height: calc(100vh - 108px);
+    /* 明确浮在 .lightbox::before 模糊层之上，并让点击继续落在图片/遮罩上 */
+    position: relative; z-index: 1;
+  }
+  .lightbox-img {
+    max-width: 100%;
+    min-height: 0;
+    width: auto; height: auto;
+    display: block;
+    border-radius: 12px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, .5);
+    transform: scale(.94);
+    /* 图片必须有自己的透明度过渡：容器已不做透明度过渡，元素只会在 .28s 后被延迟生效的
+       visibility 一次性隐藏。若这里没有 opacity 过渡，关闭时图片会「原地不动」整整 .28s
+       （只剩 6% 缩放，基本看不出），再被瞬间抹掉 —— 即用户看到的「卡一下再消失」。 */
+    opacity: 0;
+    transition: transform .28s cubic-bezier(.22, 1, .36, 1), opacity .28s ease;
+    position: relative; z-index: 1;
+  }
+  .lightbox.open .lightbox-img { transform: scale(1); opacity: 1; }
+  .lightbox-close {
+    position: absolute; top: 18px; right: 18px;
+    z-index: 2;
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; line-height: 1;
+    color: var(--accent-contrast); background: var(--accent);
+    border: none; border-radius: 50%; /* 44×44 正方形 → 正圆，不再依赖可被主题覆盖的变量 */
+    cursor: pointer; box-shadow: var(--shadow-lift);
+    /* 显隐只用 visibility，绝不给按钮自身加 opacity：自身 opacity 会把它提升为独立合成层，
+       该内核首次合成时会丢弃圆角、按矩形裁剪 —— 这就是反复出现的「先方后圆」。
+       代价：按钮不做淡入淡出，随开关瞬间显隐（也因此不会在遮罩淡出后残留）。 */
+    visibility: hidden;
+  }
+  .lightbox.open .lightbox-close { visibility: visible; }
+  /* 全局的 `a:focus-visible, button:focus-visible` 会给按钮加
+     `outline: 3px solid var(--accent)` + `outline-offset: 3px`。
+     本按钮的背景色本身就是 var(--accent)，两者同色 → 按钮外面会再套一圈
+     同色空心环、中间还夹 3px 遮罩，即「圆外一圈边框」。
+     open() 会主动 focus() 本按钮，所以每次打开必然命中。
+     这里以更高优先级 (0,2,1) 覆盖掉该规则的全部三项：去掉描边、并锁死正圆
+     （原规则里的 border-radius: 8px 是历史上「先方后圆」的元凶）。 */
+  button.lightbox-close,
+  button.lightbox-close:focus,
+  button.lightbox-close:focus-visible {
+    border-radius: 50%;
+    outline: none;
+  }
+  .lightbox-caption {
+    flex: 0 0 auto;
+    margin-top: 14px;
+    text-align: center; font-size: 14px;
+    color: rgba(255, 255, 255, .85);
+    pointer-events: none;
+    /* 与关闭按钮同理：图注也不给它自身 opacity，改用 visibility 显隐 */
+    visibility: hidden;
+  }
+  .lightbox.open .lightbox-caption { visibility: visible; }
+  .lightbox-caption:empty { display: none; }
+
   /* ============ 减少动态偏好 ============ */
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -821,6 +984,7 @@
       <li><a href="#info" data-i18n="nav.info">信息</a></li>
       <li><a href="#edu" data-i18n="nav.edu">教育</a></li>
       <li><a href="#skills" data-i18n="nav.daily">日常</a></li>
+      <li><a href="#photos" data-i18n="nav.photos">照片</a></li>
       <li><a href="#contact" data-i18n="nav.contact">联系</a></li>
     </ul>
     <div class="nav-actions">
@@ -963,6 +1127,31 @@
   </div>
 </section>
 
+<!-- ================= 摄影画廊 · 3 张实拍 ================= -->
+<section id="photos">
+  <div class="section-inner reveal">
+    <h2 data-i18n="photos.title">摄影画廊</h2>
+    <p class="section-lead" data-i18n="photos.lead">随手拍下的一些画面，点开可以看大图。</p>
+    <div class="photo-grid" id="photoGrid">
+      <figure class="photo-item">
+        <img src="photos/01-20260723-hk-sunset.jpg" alt="HK落日"
+             data-i18n-photo-alt="photos.p1_alt" data-i18n-photo-title="photos.p1_title"
+             loading="lazy" decoding="async" width="1536" height="2048">
+      </figure>
+      <figure class="photo-item">
+        <img src="photos/02-20260709-sea-sunset.jpg" alt="海上晚霞"
+             data-i18n-photo-alt="photos.p2_alt" data-i18n-photo-title="photos.p2_title"
+             loading="lazy" decoding="async" width="1536" height="2048">
+      </figure>
+      <figure class="photo-item">
+        <img src="photos/03-20260621-jiangnan-canal.jpg" alt="江南水道"
+             data-i18n-photo-alt="photos.p3_alt" data-i18n-photo-title="photos.p3_title"
+             loading="lazy" decoding="async" width="1536" height="2048">
+      </figure>
+    </div>
+  </div>
+</section>
+
 <!-- ================= 联系 ================= -->
 <section class="contact-inner section-alt" id="contact">
   <div class="section-inner reveal">
@@ -994,6 +1183,16 @@
     <div class="curtain-mark">黎同学</div>
     <div class="curtain-sub" id="curtainSub">正在切换…</div>
   </div>
+</div>
+
+<!-- ================= 图片放大 Lightbox ================= -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true"
+     aria-label="图片预览" aria-hidden="true">
+  <button type="button" class="lightbox-close" id="lightboxClose" aria-label="关闭">×</button>
+  <figure class="lightbox-figure">
+    <img class="lightbox-img" id="lightboxImg" alt="">
+    <figcaption class="lightbox-caption" id="lightboxCaption"></figcaption>
+  </figure>
 </div>
 
 <script>
@@ -1037,6 +1236,7 @@
     'nav.info':     { zh: '信息', en: 'Info' },
     'nav.edu':      { zh: '教育', en: 'Education' },
     'nav.daily':    { zh: '日常', en: 'Interests' },
+    'nav.photos':   { zh: '照片', en: 'Photos' },
     'nav.contact':  { zh: '联系', en: 'Contact' },
     'theme.light':  { zh: '简白', en: 'Light' },
     'theme.paper':  { zh: '暖纸', en: 'Paper' },
@@ -1089,9 +1289,19 @@
     'skills.tag8':  { zh: 'Steam 端游', en: 'Steam PC games' },
     'skills.tag9':  { zh: 'R&B', en: 'R&B' },
     'skills.tag10': { zh: '小说', en: 'Fiction' },
+    'photos.title': { zh: '摄影画廊', en: 'Photography' },
+    'photos.lead':  { zh: '随手拍下的一些画面，点开可以看大图。', en: 'A few frames I happened to capture — click to view larger.' },
+    'photos.p1_alt':{ zh: 'HK落日', en: 'Sunset in Hong Kong' },
+    'photos.p1_title':{ zh: 'HK落日', en: 'Sunset in Hong Kong' },
+    'photos.p2_alt':{ zh: '海上晚霞', en: 'Sunset over the sea' },
+    'photos.p2_title':{ zh: '海上晚霞', en: 'Sunset over the sea' },
+    'photos.p3_alt':{ zh: '江南水道', en: 'A canal in Jiangnan' },
+    'photos.p3_title':{ zh: '江南水道', en: 'A canal in Jiangnan' },
     'contact.title':{ zh: '保持联系', en: 'Keep in Touch' },
     'contact.lead': { zh: '没什么特别要说的，欢迎随便聊聊。', en: "Nothing much to add — feel free to drop by and chat." },
     'contact.mail': { zh: '邮箱', en: 'Email' },
+    'lightbox.label': { zh: '图片预览', en: 'Image preview' },
+    'lightbox.close': { zh: '关闭', en: 'Close' },
     'footer.text':  { zh: '黎同学 · 生物医学工程', en: 'Li · Biomedical Engineering' }
   };
   var TITLES = { zh: '黎同学 · 个人介绍', en: 'Li · About Me' };
@@ -1172,6 +1382,22 @@
         var k = el.getAttribute('data-i18n-html');
         if (I18N[k]) el.innerHTML = I18N[k][lang];
       });
+      /* 画廊图片：alt 走属性渲染 */
+      $$('[data-i18n-photo-alt]').forEach(function (el) {
+        var k = el.getAttribute('data-i18n-photo-alt');
+        if (I18N[k]) el.alt = I18N[k][lang];
+      });
+      /* lightbox 可访问名称 */
+      var lb = $('#lightbox');
+      if (lb) lb.setAttribute('aria-label', I18N['lightbox.label'][lang]);
+      var lbc = $('#lightboxClose');
+      if (lbc) lbc.setAttribute('aria-label', I18N['lightbox.close'][lang]);
+      /* 若 lightbox 正开着，同步底部说明（caption 也纳入空值守卫，与上面 lb/lbc 一致） */
+      var lbi = $('#lightboxImg'), lbcap = $('#lightboxCaption');
+      if (lbi && lbcap && lb && lb.classList.contains('open')) {
+        var kt = lbi.getAttribute('data-title-key');
+        lbcap.textContent = (kt && I18N[kt]) ? I18N[kt][lang] : '';
+      }
       /* 主题按钮移动端单字（白/纸/暗 ↔ Light/Paper/Dark） */
       $$('.tt-opt').forEach(function (b) {
         b.setAttribute('data-short', isEn ? b.getAttribute('data-short-en') : b.getAttribute('data-short-zh'));
@@ -1303,8 +1529,100 @@
       if (!raf) raf = requestAnimationFrame(tick);
     }
 
+    /* Lightbox 打开时不撒爱心：节点挂在 body 上会被 z-index 400 的遮罩挡住，变成不可见动画 */
     document.addEventListener('click', function (e) {
+      var lb = document.getElementById('lightbox');
+      if (lb && lb.classList.contains('open')) return;
       spawn(e.clientX, e.clientY);
+    });
+  })();
+
+  /* ===== 摄影画廊：点击放大 Lightbox ===== */
+  (function () {
+    var box = $('#lightbox'), img = $('#lightboxImg');
+    var caption = $('#lightboxCaption'), closeBtn = $('#lightboxClose');
+    var grid = $('#photoGrid');
+    /* 守卫补齐 caption/closeBtn：缺任一元素时不要让点击走到抛错的路径上 */
+    if (!box || !img || !grid || !caption || !closeBtn) return;
+
+    var lastFocus = null;
+
+    /* 焦点陷阱：遮罩声明了 aria-modal，Tab 就必须出不去。
+       现代浏览器额外用 inert 冻结背景（不支持的浏览器靠下面的 Tab 循环兜底）。 */
+    var INERT_OK = typeof HTMLElement !== 'undefined' && 'inert' in HTMLElement.prototype;
+    var inerted = [];
+
+    function setBackgroundInert(on) {
+      if (!INERT_OK) return;
+      if (on) {
+        var kids = document.body.children;
+        for (var i = 0; i < kids.length; i++) {
+          var el = kids[i];
+          if (el === box || el.tagName === 'SCRIPT' || el.hasAttribute('inert')) continue;
+          el.setAttribute('inert', '');
+          inerted.push(el);
+        }
+      } else {
+        for (var j = 0; j < inerted.length; j++) inerted[j].removeAttribute('inert');
+        inerted = [];
+      }
+    }
+
+    function focusables() {
+      return box.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    }
+
+    function open(src, alt, altKey, titleKey) {
+      lastFocus = document.activeElement;
+      img.src = src;
+      img.alt = alt || '';
+      img.setAttribute('data-title-key', titleKey || '');
+      /* 把图集的 alt key 也带上：语言切换时 render() 的 [data-i18n-photo-alt] 循环会同步它 */
+      img.setAttribute('data-i18n-photo-alt', altKey || '');
+      var isEn = document.documentElement.getAttribute('lang') === 'en';
+      caption.textContent = (titleKey && I18N[titleKey]) ? I18N[titleKey][isEn ? 'en' : 'zh'] : '';
+      box.classList.add('open');
+      box.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      setBackgroundInert(true);
+      /* 按钮基态是 visibility: hidden，先强制样式刷新，确保它已可见再聚焦（否则 focus() 会静默失败） */
+      void closeBtn.offsetWidth;
+      closeBtn.focus();
+    }
+    function close() {
+      box.classList.remove('open');
+      box.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      setBackgroundInert(false);
+      img.removeAttribute('data-title-key');
+      img.removeAttribute('data-i18n-photo-alt');
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    grid.addEventListener('click', function (e) {
+      var t = e.target;
+      if (t && t.tagName === 'IMG') {
+        open(t.getAttribute('src'), t.alt,
+             t.getAttribute('data-i18n-photo-alt'), t.getAttribute('data-i18n-photo-title'));
+      }
+    });
+    closeBtn.addEventListener('click', close);
+    /* 点遮罩空白不再关闭大图：全屏容器的 padding-top 安全区（图片上方那条 84px）
+       本身就是一片空白，极易误点；图片左右两侧的空白同理。现在只由 × 与 Esc 关闭。
+       若要恢复「点外部关闭」，把下面这行放回来：
+       box.addEventListener('click', function (e) { if (e.target === box) close(); }); */
+    document.addEventListener('keydown', function (e) {
+      if (!box.classList.contains('open')) return;
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key !== 'Tab') return;
+      var f = focusables();
+      if (!f.length) { e.preventDefault(); return; }
+      var first = f[0], last = f[f.length - 1], active = document.activeElement;
+      if (e.shiftKey) {
+        if (active === first || !box.contains(active)) { e.preventDefault(); last.focus(); }
+      } else if (active === last || !box.contains(active)) {
+        e.preventDefault(); first.focus();
+      }
     });
   })();
 })();
